@@ -15,7 +15,7 @@ jobs:
 
       - name: Unzip source project
         run: |
-          unzip -o NVPN_Source.zip -d project
+          unzip -o NVPN_Fixed.zip -d project
           ls -la project/
 
       - name: Setup JDK 17
