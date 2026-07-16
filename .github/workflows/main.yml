@@ -10,9 +10,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unzip Final Project
+      - name: Unzip Project
         run: |
-          unzip -o NVPN_Final.zip -d .
+          unzip -o NVPN_Source.zip -d .
           ls -la
 
       - name: Setup JDK 17
@@ -30,12 +30,15 @@ jobs:
             -keystore nvpn.keystore -storepass 12345678 -keypass 12345678 \
             -dname "CN=N VPN, OU=Dev, O=N, L=Tehran, S=Tehran, C=IR"
 
-      - name: Build & Sign APK
+      - name: Build APK
         run: |
           cd NVPN
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
-          
+
+      - name: Sign APK
+        run: |
+          cd NVPN
           $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
             --ks ../nvpn.keystore \
             --ks-pass pass:12345678 \
