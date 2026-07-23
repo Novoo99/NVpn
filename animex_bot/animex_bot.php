@@ -27,7 +27,7 @@ date_default_timezone_set('Asia/Tehran');
 
 /* ============================ 0) مسیرها و کانفیگ ========================== */
 define('AX_DIR', __DIR__);
-define('AX_CONFIG', AX_DIR . '/config.json');
+define('AX_CONFIG', AX_DIR . '/config.php');
 define('AX_DB', AX_DIR . '/animex.db');
 define('AX_VER', '2.0');
 define('AX_SRC', 'https://animex.click/');
@@ -80,7 +80,9 @@ class AXStore {
         $this->db->prepare('UPDATE users SET is_admin=? WHERE id=?')->execute([$v ? 1 : 0, $id]);
     }
     public function set_vip(int $id, int $days): void {
-        $base = time() > ($this->get_user($id)['vip_until'] ?? 0) ? time() : (int)($this->get_user($id)['vip_until']);
+        $row = $this->get_user($id);
+        $cur = $row ? (int)$row['vip_until'] : 0;
+        $base = time() > $cur ? time() : $cur;
         $until = $base + $days * 86400;
         $this->db->prepare('UPDATE users SET vip_until=? WHERE id=?')->execute([$until, $id]);
     }
@@ -350,7 +352,7 @@ function ax_expand_dir(string $url): array {
     }
     $d = new DOMDocument('1.0', 'UTF-8');
     libxml_use_internal_errors(true);
-    $d->loadHTML('<meta charset="utf-8">' . mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
+    $d->loadHTML('<?xml encoding="UTF-8">' . $html);
     libxml_clear_errors();
     $xp = new DOMXPath($d);
     $out = [];
