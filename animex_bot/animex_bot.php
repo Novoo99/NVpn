@@ -785,8 +785,14 @@ if (!$cfg) {
     exit;
 }
 if (isset($_GET['test'])) {
+    $tu = urldecode((string)$_GET['test']);
+    $host = strtolower((string)parse_url($tu, PHP_URL_HOST));
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(ax_scrape(urldecode((string)$_GET['test'])), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    if (strpos($host, 'animex') === false) {
+        echo json_encode(['error' => 'فقط لینک‌های animex.click مجاز است.'], JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode(ax_scrape($tu), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
     exit;
 }
 if (isset($_GET['panel'])) { ax_panel((string)$_GET['panel'], $_GET); exit; }
