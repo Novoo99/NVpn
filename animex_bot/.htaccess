@@ -1,0 +1,6 @@
+# محافظت از فایل‌های حساس (دیتابیس و کانفیگ) در برابر دانلود مستقیم از وب
+<FilesMatch "\.(db|sqlite|sqlite3|json|log)$">
+    Require all denied
+</FilesMatch>
+# جلوگیری از لیست شدن پوشه
+Options -Indexes
